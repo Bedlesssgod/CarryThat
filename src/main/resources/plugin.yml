@@ -1,0 +1,5 @@
+name: CarryThat
+version: '${project.version}'
+main: dev.bedless.carrythat.CarryThat
+api-version: 1.19
+description: Allows you to Pickup Entities/Tile Entities
