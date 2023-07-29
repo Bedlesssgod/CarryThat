@@ -1,10 +1,10 @@
 package dev.bedless.carrythat.config;
 
-import lombok.Getter;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("all")
 public enum Carry {
 
     CHEST(CarryGroup.TILE_ENTITY, "Chest", Material.CHEST, true),
@@ -22,17 +22,31 @@ public enum Carry {
 
     private final String displayName;
     private final CarryGroup group;
-    @Getter
     private final Material material;
-    private boolean isEnabled;
+    private final boolean fallbackIsEnabled;
+    private boolean configIsEnabled;
 
+
+    /**
+     * Creates an Constant with the give values
+     *
+     * @param group       The Group the Constant gets sorted into
+     * @param displayName The Displayname, used in the Configuration
+     * @param material    The Material, used to check if an attempted pick is valid to pickup
+     * @param isEnabled   If the item can be picked up
+     */
     Carry(CarryGroup group, String displayName, Material material, boolean isEnabled) {
         this.group = group;
         this.displayName = displayName;
         this.material = material;
-        this.isEnabled = isEnabled;
+        this.fallbackIsEnabled = isEnabled;
     }
 
+    /**
+     * Gets an ArrayList with the Constants that belong to the given group
+     * @param carryGroup The group of items to look for
+     * @return Returns a List of the constants that are in the searcged group
+     */
     public static ArrayList<Carry> getGroup(CarryGroup carryGroup) {
         ArrayList<Carry> tileEntity = new ArrayList<>();
         ArrayList<Carry> entity = new ArrayList<>();
@@ -55,30 +69,71 @@ public enum Carry {
         }
     }
 
+    /**
+     * Gets an ArrayList with the Material that are activated, retrieves the data from the Constants
+     * @return Returns a List of the materials that are activated, gotten from the constants
+     */
     public static ArrayList<Material> getAllowedMaterials() {
         ArrayList<Material> materials = new ArrayList<>();
         for (Carry carry : Carry.values()) {
-            if (!carry.getIsEnableConfig()) continue;
+            if (!carry.isEnabled()) continue;
             materials.add(carry.getMaterial());
         }
         return materials;
     }
 
+    /**
+     * Sets if the Constant is enabled or disabled with given value
+     * @param isEnabled Sets the new value of isEnabled
+     * @return Returns this
+     */
     public Carry setIsEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
+        this.configIsEnabled = isEnabled;
         return this;
     }
 
-    public boolean getIsEnableConfig() {
-        return isEnabled;
+    /**
+     * Gets if the Constant is enabled
+     *
+     * @return Returns a boolean, that tells if the constant is enabled
+     */
+    public boolean isEnabled() {
+        return configIsEnabled;
     }
 
+    /**
+     * Gets the is enabled value that was hardcoded into the Constant
+     *
+     * @return Returns a boolean, that was set on the creation of the Constant
+     */
+    public boolean getFallBackValue() {
+        return fallbackIsEnabled;
+    }
+
+    /**
+     * Gets the Nice name of the Constant, with spaces and capitalization
+     * @return Returns the Name of the Constant, with spaces and capitalization
+     */
     public String getFancyName() {
+        String cap = "capatalization";
         return displayName;
     }
 
+    /**
+     * Gets the group of the Constant
+     * @return Returns the group of this Constant
+     */
     public CarryGroup getRawGroup() {
         return group;
+    }
+
+    /**
+     * Gets the Material of the Constant
+     *
+     * @return Returns the Material of the Constant
+     */
+    public Material getMaterial(){
+        return material;
     }
 
 }

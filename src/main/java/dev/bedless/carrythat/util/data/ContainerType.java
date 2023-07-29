@@ -1,8 +1,5 @@
 package dev.bedless.carrythat.util.data;
 
-import lombok.Getter;
-
-@Getter
 public enum ContainerType {
 
     BARREL("Barrel"),
@@ -18,8 +15,22 @@ public enum ContainerType {
 
     private final String name;
 
+    /**
+     * Creates a Constant with the given Data
+     *
+     * @param name The name to return when using getName()
+     */
     ContainerType(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets the Name of the Constant
+     *
+     * @return Returns the name set by The Constant
+     */
+    public String getName() {
+        return name;
     }
 
 }

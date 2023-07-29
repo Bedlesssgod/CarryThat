@@ -26,6 +26,7 @@ public final class CarryThat extends JavaPlugin {
     private PaperCommandManager paperCommandManager;
     private float tps;
 
+
     @Override
     public void onEnable() {
         log("Starting Timing Manager", CLogLevel.STARTUP);
@@ -40,6 +41,9 @@ public final class CarryThat extends JavaPlugin {
         log("Saving Data", CLogLevel.SHUTDOWN);
     }
 
+    /**
+     * Creates a GSON Builder, registers the PaperCommandManager and run the handleConfig() function
+     */
     private void handleVar() {
         instance = this;
         gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -47,18 +51,33 @@ public final class CarryThat extends JavaPlugin {
         handleConfig();
     }
 
+    /**
+     * Registers events
+     */
     private void handleEvents() {
         new CarryEvent();
     }
 
+    /**
+     * Adds commands to the PaperCommandManager
+     */
     private void handleCommands() {
         new AdminCommand();
     }
 
+    /**
+     * Creates a new MainConfiguration with the name config.json and reloads it
+     */
     private void handleConfig() {
         new MainConfig(new File(this.getDataFolder() + File.separator, "config.json")).reload();
     }
 
+    /**
+     * Calculates the TPS, send it to the console and returns it as a Float
+     *
+     * @return Returns the TPS in a float
+     * @deprecated This function will be removed in the near future
+     */
     public float getTPS() {
         tps = System.currentTimeMillis();
         Bukkit.getConsoleSender().sendMessage(tps + "");
