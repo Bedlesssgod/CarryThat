@@ -2,7 +2,6 @@ package dev.bedless.carrythat.config;
 
 import dev.bedless.carrythat.CarryThat;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 @Getter
+@SuppressWarnings("all")
 public abstract class ConfigurationLIB {
 
     private static final ArrayList<String> registeredConfigs = new ArrayList<>();
@@ -128,7 +128,7 @@ public abstract class ConfigurationLIB {
      * @return Returns data as a String
      */
     public String getString(String key) {
-        return ChatColor.translateAlternateColorCodes('§', getRawData(key));
+        return getRawData(key);
     }
 
     /**
