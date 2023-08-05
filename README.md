@@ -17,6 +17,7 @@
 
 ## Todo:
 * Add Placed blocks having the correct Inventories
+* Crash Protection
 
 ## Can be picked up
 ### Tile Entities
