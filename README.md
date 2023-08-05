@@ -3,6 +3,7 @@
 * Pickup TileEntities [View All](#tile-entities)
 * Block snapping to face Player
 * Custom Pickup Configurations
+* Disconnect Protection
 
 ## Coming soon!
 
@@ -12,7 +13,7 @@
 * Statistics (Blocks Picked Up/Placed)
 * Placeholders
 * Other API integrations
-* Pickup Entities [View All](#entities)
+* Pickup Entities [View All](#entities-coming-soon)
 
 ## Todo:
 * Add Placed blocks having the correct Inventories
