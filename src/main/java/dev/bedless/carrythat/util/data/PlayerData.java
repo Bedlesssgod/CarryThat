@@ -23,18 +23,17 @@ public class PlayerData {
     private static HashMap<UUID, PlayerData> cachedPlayerData = new HashMap<>();
     private boolean hasPickedUp;
     private boolean hasArmorStand;
-    private Material currentPickedUp;
+    private Block currentPickedUp;
     private ArmorStand followingArmorStand;
     private Player player;
 
     /**
      * Creates PlayerData and adds it to the cachedPlayerData HashMap
-     *
-     * @param player          The Player to base the PlayerData on
-     * @param currentPickedUp The Material, that the player currently picked up
+     * @param player The Player to base the PlayerData on
+     * @param currentPickedUp The Block, that the player currently picked up
      * @return The Player Data Object
      */
-    public PlayerData(Player player, Material currentPickedUp) {
+    public PlayerData(Player player, Block currentPickedUp) {
         hasPickedUp = false;
         hasArmorStand = false;
         this.player = player;
@@ -45,10 +44,10 @@ public class PlayerData {
     /**
      * Creates PlayerData and adds it to the cachedPlayerData HashMap
      * @param uuid The Player UUID to base the PlayerData on
-     * @param currentPickedUp The Material, that the player currently picked up
+     * @param currentPickedUp The Block, that the player currently picked up
      * @return The Player Data Object
      */
-    public PlayerData(UUID uuid, Material currentPickedUp) {
+    public PlayerData(UUID uuid, Block currentPickedUp) {
         hasPickedUp = false;
         hasArmorStand = false;
         this.player = Bukkit.getPlayer(uuid);
@@ -143,11 +142,20 @@ public class PlayerData {
     }
 
     /**
-     * Gets the Material of the Block the Player currently has Picked up
-     * @return Returns the material that the Player has picked up
+     * Gets the Block the Player currently has Picked up
+     * @return Returns the Block that the Player has picked up
      */
-    public Material getPickedUp() {
+    public Block getPickedUp() {
         return currentPickedUp;
+    }
+
+    /**
+     * Gets the Material of the Block currently Pickedup
+     *
+     * @return Returns the Material of the Block the Player picked up
+     */
+    public Material getPickedUpType() {
+        return currentPickedUp.getType();
     }
 
     /**
@@ -167,7 +175,7 @@ public class PlayerData {
         followingArmorStand.remove();
         player.removePotionEffect(PotionEffectType.SLOW);
         hasArmorStand = false;
-        currentPickedUp = Material.AIR;
+        currentPickedUp = null;
         return this;
     }
 
@@ -176,20 +184,17 @@ public class PlayerData {
      * @return The Player Data Object
      */
     public PlayerData createFollowingArmorStand() {
-        followingArmorStand = CarryUtils.summonArmorStand(player.getLocation(), currentPickedUp);
+        followingArmorStand = CarryUtils.summonArmorStand(player.getLocation(), currentPickedUp.getType());
         hasArmorStand = true;
         return this;
     }
 
     /**
      * Handles the placement of the block that was picked up
-     *
      * @return The Player Data Object
      */
     public PlayerData handlePlacement(PlayerInteractEvent event) {
         Block subBlock;
-        BlockData data;
-        Directional directionalData;
         switch (event.getBlockFace()) {
             case UP -> {
                 event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: UP + y: +1");
@@ -200,7 +205,6 @@ public class PlayerData {
                 subBlock = event.getClickedBlock().getLocation().add(0, -1, 0).getBlock();
             }
             case EAST -> {
-                //Correct
                 event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: EAST + x: +1");
                 subBlock = event.getClickedBlock().getLocation().add(1, 0, 0).getBlock();
             }
@@ -218,30 +222,24 @@ public class PlayerData {
             }
             default -> {
                 subBlock = null;
-                getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUp().name() + " you were holding!");
+                getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUpType().name() + " you were holding!");
                 return this;
             }
         }
         if (subBlock.getType() != Material.AIR) {
-            getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUp().name() + " you were holding!");
+            getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUpType().name() + " you were holding!");
             return this;
         }
-        subBlock.setType(getPickedUp());
-        data = subBlock.getBlockData();
-        directionalData = (Directional) data;
+        subBlock.setType(getPickedUpType());
+        BlockData data = subBlock.getBlockData();
+        Directional directionalData = (Directional) data;
         directionalData.setFacing(player.getFacing().getOppositeFace());
         subBlock.setBlockData(data);
-        /*
-        Block above = subBlock = event.getClickedBlock().getLocation().clone().add(0, 1, 0).getBlock();tType() == Material.AIR) {
-            above.setType(getPickedUp());
-            BlockData data = above.getBlockData();
-            Directional directional = (Directional) data;
-            directional.setFacing(player.getFacing().getOppositeFace());
-            above.setBlockData(data);
-            getPlayer().sendMessage(ChatColor.RED + "Set block one above");
-            return this;
+        try {
+
+        } catch (Exception ex) {
+            getPlayer().playSound(player.getLocation(), "", 0.5f, 0.5f);
         }
-        */
         return this;
     }
 

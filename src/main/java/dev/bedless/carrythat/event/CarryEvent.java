@@ -38,13 +38,13 @@ public class CarryEvent implements Listener {
         }
         if (!CarryUtils.canBePickedUp(event)) return;
         if (!PlayerData.exist(event.getPlayer())) {
-            new PlayerData(event.getPlayer(), event.getClickedBlock().getType()).createFollowingArmorStand();
+            new PlayerData(event.getPlayer(), event.getClickedBlock()).createFollowingArmorStand();
             removeBlock(event.getClickedBlock());
             event.setCancelled(true);
             return;
         }
         if (!PlayerData.getPlayerData(event.getPlayer()).hasFollowingArmorStand()) {
-            new PlayerData(event.getPlayer(), event.getClickedBlock().getType()).handlePickup(event.getClickedBlock());
+            new PlayerData(event.getPlayer(), event.getClickedBlock()).handlePickup(event.getClickedBlock());
             removeBlock(event.getClickedBlock());
             event.setCancelled(true);
             return;

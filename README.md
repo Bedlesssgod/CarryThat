@@ -4,6 +4,7 @@
 * Block snapping to face Player
 * Custom Pickup Configurations
 * Disconnect Protection
+* Great Documentation
 
 ## Coming soon!
 
