@@ -1,6 +1,6 @@
 ## Features
 
-* Pickup TileEntities [View All](#can-be-picked-up)
+* Pickup TileEntities [View All](#tile-entities)
 * Block snapping to face Player
 * Custom Pickup Configurations
 
@@ -12,7 +12,7 @@
 * Statistics (Blocks Picked Up/Placed)
 * Placeholders
 * Other API integrations
-* Pickup Entities
+* Pickup Entities [View All](#entities)
 
 ## Todo:
 * Add Placed blocks having the correct Inventories
