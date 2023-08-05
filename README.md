@@ -1,10 +1,10 @@
-#### Features
+## Features
 
-* Pickup TileEntities [View All](#Can_be_picked_up)
+* Pickup TileEntities [View All](#can-be-picked-up)
 * Block snapping to face Player
 * Custom Pickup Configurations
 
-### Coming soon!
+## Coming soon!
 
 * Block weight, adds variegating slowness depending on weight
 * Weight depending on what a container is holding
@@ -14,10 +14,11 @@
 * Other API integrations
 * Pickup Entities
 
-### Todo:
+## Todo:
+* Add Placed blocks having the correct Inventories
 
-### Can be picked up
-
+## Can be picked up
+### Tile Entities
 * Chest
 * Furnace
 * Blast Furnace
@@ -27,3 +28,5 @@
 * Hopper
 * Barrel
 * Brewing Stand
+### Entities (Coming Soon)
+* Villager
