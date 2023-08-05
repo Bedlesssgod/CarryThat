@@ -24,6 +24,7 @@ public class CarryUtils {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return false;
         if (!event.getPlayer().isSneaking()) return false;
         if (event.getClickedBlock() == null) return false;
+        event.getPlayer().sendMessage("CarryUtils:27 -> " + event.getClickedBlock().getType().name());
         return Carry.getAllowedMaterials().contains(event.getClickedBlock().getType());
     }
 

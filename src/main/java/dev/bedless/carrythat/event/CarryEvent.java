@@ -32,17 +32,23 @@ public class CarryEvent implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !event.getPlayer().isSneaking() || event.getHand() != EquipmentSlot.HAND)
             return;
         if (PlayerData.exist(event.getPlayer()) && PlayerData.getPlayerData(event.getPlayer()).hasFollowingArmorStand()) {
-            PlayerData.getPlayerData(event.getPlayer()).handlePlacement(event.getClickedBlock());
+            PlayerData.getPlayerData(event.getPlayer()).handlePlacement(event);
             event.setCancelled(true);
+            return;
         }
         if (!CarryUtils.canBePickedUp(event)) return;
         if (!PlayerData.exist(event.getPlayer())) {
             new PlayerData(event.getPlayer(), event.getClickedBlock().getType()).createFollowingArmorStand();
             removeBlock(event.getClickedBlock());
+            event.setCancelled(true);
             return;
         }
-        PlayerData.getPlayerData(event.getPlayer()).handlePickup(event.getClickedBlock());
-        event.setCancelled(true);
+        if (!PlayerData.getPlayerData(event.getPlayer()).hasFollowingArmorStand()) {
+            new PlayerData(event.getPlayer(), event.getClickedBlock().getType()).handlePickup(event.getClickedBlock());
+            removeBlock(event.getClickedBlock());
+            event.setCancelled(true);
+            return;
+        }
     }
 
     /**

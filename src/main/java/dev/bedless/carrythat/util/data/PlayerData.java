@@ -5,8 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -54,7 +57,7 @@ public class PlayerData {
     }
 
     /**
-     * Checks if the PlayerData exists for a give UUID
+     * Checks if the PlayerData exists for a given UUID
      * @param uuid The UUID to the PlayerData to check for
      * @return Returns if the PlayerData Exists
      */
@@ -72,7 +75,7 @@ public class PlayerData {
     }
 
     /**
-     * Gets the PlayerData from a give UUID
+     * Gets the PlayerData from a given UUID
      * @param uuid The UUID to the PlayerData to get
      * @return If the PlayerData exists, will return it
      */
@@ -179,30 +182,66 @@ public class PlayerData {
     }
 
     /**
-     * Handles the placement of a block that was picked up
+     * Handles the placement of the block that was picked up
      *
      * @return The Player Data Object
      */
-    public PlayerData handlePlacement(Block block) {
-        Block block1 = block.getLocation().add(0, 1, 0).getBlock();
-        if (block1.getType() == Material.AIR) {
-            block1.setType(getPickedUp());
+    public PlayerData handlePlacement(PlayerInteractEvent event) {
+        Block subBlock;
+        BlockData data;
+        Directional directionalData;
+        switch (event.getBlockFace()) {
+            case UP -> {
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: UP + y: +1");
+                subBlock = event.getClickedBlock().getLocation().add(0, +1, 0).getBlock();
+            }
+            case DOWN -> {
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: DOWN + y: -1");
+                subBlock = event.getClickedBlock().getLocation().add(0, -1, 0).getBlock();
+            }
+            case EAST -> {
+                //Correct
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: EAST + x: +1");
+                subBlock = event.getClickedBlock().getLocation().add(1, 0, 0).getBlock();
+            }
+            case WEST -> {
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: WEST + x: -1");
+                subBlock = event.getClickedBlock().getLocation().add(-1, 0, 0).getBlock();
+            }
+            case NORTH -> {
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: NORTH + z: -1");
+                subBlock = event.getClickedBlock().getLocation().add(0, 0, -1).getBlock();
+            }
+            case SOUTH -> {
+                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: SOUTH + x: +1");
+                subBlock = event.getClickedBlock().getLocation().add(0, 0, +1).getBlock();
+            }
+            default -> {
+                subBlock = null;
+                getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUp().name() + " you were holding!");
+                return this;
+            }
+        }
+        if (subBlock.getType() != Material.AIR) {
+            getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUp().name() + " you were holding!");
+            return this;
+        }
+        subBlock.setType(getPickedUp());
+        data = subBlock.getBlockData();
+        directionalData = (Directional) data;
+        directionalData.setFacing(player.getFacing().getOppositeFace());
+        subBlock.setBlockData(data);
+        /*
+        Block above = subBlock = event.getClickedBlock().getLocation().clone().add(0, 1, 0).getBlock();tType() == Material.AIR) {
+            above.setType(getPickedUp());
+            BlockData data = above.getBlockData();
+            Directional directional = (Directional) data;
+            directional.setFacing(player.getFacing().getOppositeFace());
+            above.setBlockData(data);
             getPlayer().sendMessage(ChatColor.RED + "Set block one above");
             return this;
         }
-        Block block2 = block.getLocation().add(1, 0, 0).getBlock();
-        if (block2.getType() == Material.AIR) {
-            block2.setType(getPickedUp());
-            getPlayer().sendMessage(ChatColor.RED + "Set block x 1");
-            return this;
-        }
-        Block block3 = block.getLocation().add(0, 0, 1).getBlock();
-        if (block3.getType() == Material.AIR) {
-            block3.setType(getPickedUp());
-            getPlayer().sendMessage(ChatColor.RED + "Set block z 1");
-            return this;
-        }
-        getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUp().name() + " you were holding!");
+        */
         return this;
     }
 

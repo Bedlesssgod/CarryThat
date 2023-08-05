@@ -18,7 +18,7 @@ public enum Carry {
     BREWING_STAND(CarryGroup.TILE_ENTITY, "Brewing Stand", Material.BREWING_STAND, false),
     DROPPER(CarryGroup.TILE_ENTITY, "Dropper", Material.DROPPER, false),
 
-    VILLAGER(CarryGroup.ENTITY, "Villager", Material.VILLAGER_SPAWN_EGG, true);
+    VILLAGER(CarryGroup.ENTITY, "Villager", Material.VILLAGER_SPAWN_EGG, false);
 
     private final String displayName;
     private final CarryGroup group;
