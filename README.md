@@ -14,6 +14,7 @@
 * Statistics (Blocks Picked Up/Placed)
 * Placeholders
 * Other API integrations
+* Permissions to pickup certain blocks
 * Pickup Entities [View All](#entities-coming-soon)
 
 ## Todo:

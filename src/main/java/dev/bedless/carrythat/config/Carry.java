@@ -17,6 +17,7 @@ public enum Carry {
     FURNACE(CarryGroup.TILE_ENTITY, "Furnace", Material.FURNACE, true),
     BREWING_STAND(CarryGroup.TILE_ENTITY, "Brewing Stand", Material.BREWING_STAND, false),
     DROPPER(CarryGroup.TILE_ENTITY, "Dropper", Material.DROPPER, false),
+    POOP(CarryGroup.TILE_ENTITY, "Shit", Material.COCOA_BEANS, true),
 
     VILLAGER(CarryGroup.ENTITY, "Villager", Material.VILLAGER_SPAWN_EGG, false);
 
@@ -26,10 +27,8 @@ public enum Carry {
     private final boolean fallbackIsEnabled;
     private boolean configIsEnabled;
 
-
     /**
-     * Creates an Constant with the give values
-     *
+     * Creates an Constant with the given values
      * @param group       The Group the Constant gets sorted into
      * @param displayName The Displayname, used in the Configuration
      * @param material    The Material, used to check if an attempted pick is valid to pickup

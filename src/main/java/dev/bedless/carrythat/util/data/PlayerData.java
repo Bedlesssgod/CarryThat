@@ -1,12 +1,13 @@
 package dev.bedless.carrythat.util.data;
 
+import dev.bedless.carrythat.config.Carry;
 import dev.bedless.carrythat.util.player.CarryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -29,7 +30,8 @@ public class PlayerData {
 
     /**
      * Creates PlayerData and adds it to the cachedPlayerData HashMap
-     * @param player The Player to base the PlayerData on
+     *
+     * @param player          The Player to base the PlayerData on
      * @param currentPickedUp The Block, that the player currently picked up
      * @return The Player Data Object
      */
@@ -37,13 +39,14 @@ public class PlayerData {
         hasPickedUp = false;
         hasArmorStand = false;
         this.player = player;
-        this.currentPickedUp = currentPickedUp;
+        this.currentPickedUp = canBePickedUp(currentPickedUp) ? currentPickedUp : null;
         cachedPlayerData.put(player.getUniqueId(), this);
     }
 
     /**
      * Creates PlayerData and adds it to the cachedPlayerData HashMap
-     * @param uuid The Player UUID to base the PlayerData on
+     *
+     * @param uuid            The Player UUID to base the PlayerData on
      * @param currentPickedUp The Block, that the player currently picked up
      * @return The Player Data Object
      */
@@ -57,6 +60,7 @@ public class PlayerData {
 
     /**
      * Checks if the PlayerData exists for a given UUID
+     *
      * @param uuid The UUID to the PlayerData to check for
      * @return Returns if the PlayerData Exists
      */
@@ -66,6 +70,7 @@ public class PlayerData {
 
     /**
      * Checks if the PlayerData exists for a given Player
+     *
      * @param player The player to the PlayerData to check for
      * @return Returns if the PlayerData Exists
      */
@@ -75,6 +80,7 @@ public class PlayerData {
 
     /**
      * Gets the PlayerData from a given UUID
+     *
      * @param uuid The UUID to the PlayerData to get
      * @return If the PlayerData exists, will return it
      */
@@ -84,6 +90,7 @@ public class PlayerData {
 
     /**
      * Gets the PlayerData from a given Player
+     *
      * @param player The UUID to the PlayerData to get
      * @return If the PlayerData exists, will return it
      */
@@ -93,6 +100,7 @@ public class PlayerData {
 
     /**
      * Gets the cachedPlayerData HashMap
+     *
      * @return Returns the raw list of cached PlayerData
      */
     public static HashMap<UUID, PlayerData> getSavedPlayerData() {
@@ -102,6 +110,7 @@ public class PlayerData {
 
     /**
      * Sets if the Player has Picked up any Block
+     *
      * @param hasPickedUp The new Value of hasPickedUP
      */
     public void setHasPickedUp(boolean hasPickedUp) {
@@ -110,6 +119,7 @@ public class PlayerData {
 
     /**
      * Sets if an Armorstand is following the Player
+     *
      * @param hasArmorStand The new Value of hasArmorStand
      */
     public void setHasFollowingArmorStand(boolean hasArmorStand) {
@@ -118,6 +128,7 @@ public class PlayerData {
 
     /**
      * Gets if an Armorstand is following the Player
+     *
      * @return If the player has a following Armorstand
      */
     public boolean hasFollowingArmorStand() {
@@ -126,6 +137,7 @@ public class PlayerData {
 
     /**
      * Gets if the Armorstand that is following the Player
+     *
      * @return Returns the armorstand that is following the player of this PlayerData
      */
     public ArmorStand getFollowingArmorStand() {
@@ -134,6 +146,7 @@ public class PlayerData {
 
     /**
      * Sets the Armorstand that is following the player
+     *
      * @param armorStand Sets the given armorstand to follow the Player
      */
     public void setFollowingArmorStand(ArmorStand armorStand) {
@@ -143,6 +156,7 @@ public class PlayerData {
 
     /**
      * Gets the Block the Player currently has Picked up
+     *
      * @return Returns the Block that the Player has picked up
      */
     public Block getPickedUp() {
@@ -160,6 +174,7 @@ public class PlayerData {
 
     /**
      * Gets the Player from the PlayerData
+     *
      * @return Returns the Player from the PlayerData
      */
     public Player getPlayer() {
@@ -181,6 +196,7 @@ public class PlayerData {
 
     /**
      * Creates an Armorstand to follow the Player, binds it to Player PlayerData
+     *
      * @return The Player Data Object
      */
     public PlayerData createFollowingArmorStand() {
@@ -191,55 +207,73 @@ public class PlayerData {
 
     /**
      * Handles the placement of the block that was picked up
+     *
      * @return The Player Data Object
      */
     public PlayerData handlePlacement(PlayerInteractEvent event) {
-        Block subBlock;
-        switch (event.getBlockFace()) {
-            case UP -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: UP + y: +1");
-                subBlock = event.getClickedBlock().getLocation().add(0, +1, 0).getBlock();
+        try {
+            Block subBlock;
+            switch (event.getBlockFace()) {
+                case UP -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: UP + y: +1");
+                    subBlock = event.getClickedBlock().getLocation().add(0, +1, 0).getBlock();
+                }
+                case DOWN -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: DOWN + y: -1");
+                    subBlock = event.getClickedBlock().getLocation().add(0, -1, 0).getBlock();
+                }
+                case EAST -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: EAST + x: +1");
+                    subBlock = event.getClickedBlock().getLocation().add(1, 0, 0).getBlock();
+                }
+                case WEST -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: WEST + x: -1");
+                    subBlock = event.getClickedBlock().getLocation().add(-1, 0, 0).getBlock();
+                }
+                case NORTH -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: NORTH + z: -1");
+                    subBlock = event.getClickedBlock().getLocation().add(0, 0, -1).getBlock();
+                }
+                case SOUTH -> {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: SOUTH + x: +1");
+                    subBlock = event.getClickedBlock().getLocation().add(0, 0, +1).getBlock();
+                }
+                default -> {
+                    subBlock = null;
+                    getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUpType().name() + " you were holding!");
+                    return this;
+                }
             }
-            case DOWN -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: DOWN + y: -1");
-                subBlock = event.getClickedBlock().getLocation().add(0, -1, 0).getBlock();
-            }
-            case EAST -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: EAST + x: +1");
-                subBlock = event.getClickedBlock().getLocation().add(1, 0, 0).getBlock();
-            }
-            case WEST -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: WEST + x: -1");
-                subBlock = event.getClickedBlock().getLocation().add(-1, 0, 0).getBlock();
-            }
-            case NORTH -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: NORTH + z: -1");
-                subBlock = event.getClickedBlock().getLocation().add(0, 0, -1).getBlock();
-            }
-            case SOUTH -> {
-                event.getPlayer().sendMessage(ChatColor.RED + "Clicked Surface: SOUTH + x: +1");
-                subBlock = event.getClickedBlock().getLocation().add(0, 0, +1).getBlock();
-            }
-            default -> {
-                subBlock = null;
+            if (subBlock.getType() != Material.AIR) {
                 getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUpType().name() + " you were holding!");
                 return this;
             }
-        }
-        if (subBlock.getType() != Material.AIR) {
-            getPlayer().sendMessage(ChatColor.RED + "Couldn't Place the " + getPickedUpType().name() + " you were holding!");
-            return this;
-        }
-        subBlock.setType(getPickedUpType());
-        BlockData data = subBlock.getBlockData();
-        Directional directionalData = (Directional) data;
-        directionalData.setFacing(player.getFacing().getOppositeFace());
-        subBlock.setBlockData(data);
-        try {
-
+            getPlayer().sendMessage("PlayerData: 251 - " + getPickedUpType().toString());
+            subBlock.setType(getPickedUpType());
+            BlockData data = subBlock.getBlockData();
+            getPlayer().sendMessage(data.getAsString());
+            //Directional directionalData = (Directional) data;
+            //directionalData.setFacing(player.getFacing().getOppositeFace());
+            //subBlock.setBlockData(data);
         } catch (Exception ex) {
-            getPlayer().playSound(player.getLocation(), "", 0.5f, 0.5f);
+            ex.printStackTrace();
+            getPlayer().playSound(player.getLocation(), Sound.ENTITY_GOAT_SCREAMING_HURT, 0.5f, 0.5f);
         }
+        return this;
+    }
+
+    /**
+     * Handles the pickup of a block, binds it to player PlayerData
+     * @param block The Block to use
+     * @return The Player Data Object
+     */
+    public PlayerData handlePickup(Block block) {
+        if (hasPickedUp) return this;
+        if (canBePickedUp(block)) return this;
+        currentPickedUp = block;
+        createFollowingArmorStand();
+        removeBlock(block);
+        getPlayer().sendMessage("PlayerData: 276 - " + block.getType().toString());
         return this;
     }
 
@@ -248,13 +282,25 @@ public class PlayerData {
      *
      * @return The Player Data Object
      */
-    public PlayerData handlePickup(Block block) {
-        if (hasFollowingArmorStand()) {
-            removeBlock(block);
-            return this;
-        }
+    public PlayerData handlePickup() {
+        if (hasPickedUp) return this;
+        if (canBePickedUp(getPickedUp())) return this;
+        currentPickedUp = getPickedUp();
         createFollowingArmorStand();
-        removeBlock(block);
+        removeBlock(getPickedUp());
+        getPlayer().sendMessage("PlayerData: 276 - " + getPickedUp().getType().toString());
         return this;
+    }
+
+    /**
+     * Gets if the given Block can be picked up
+     *
+     * @param block Block to check if is Allowed
+     * @return Returns if the Block from the event can be picked up as a boolean
+     */
+    public boolean canBePickedUp(Block block) {
+        getPlayer().sendMessage("CarryUtils:27 -> " + block.getType().name());
+        Carry.POOP.isEnabled();
+        return Carry.getAllowedMaterials().contains(block.getType());
     }
 }

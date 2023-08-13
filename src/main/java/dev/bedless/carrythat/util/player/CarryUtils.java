@@ -1,32 +1,15 @@
 package dev.bedless.carrythat.util.player;
 
 import dev.bedless.carrythat.CarryThat;
-import dev.bedless.carrythat.config.Carry;
 import dev.bedless.carrythat.util.data.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class CarryUtils {
-
-    /**
-     * Gets if the given events Block can be picked up
-     *
-     * @param event PlayerInteractEvent to check the block from
-     * @return Returns if the Block from the event can be picked up as a boolean
-     */
-    public static boolean canBePickedUp(PlayerInteractEvent event) {
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return false;
-        if (!event.getPlayer().isSneaking()) return false;
-        if (event.getClickedBlock() == null) return false;
-        event.getPlayer().sendMessage("CarryUtils:27 -> " + event.getClickedBlock().getType().name());
-        return Carry.getAllowedMaterials().contains(event.getClickedBlock().getType());
-    }
 
     /**
      * Creates and Armorstand with the given Data, spawns it and returns it

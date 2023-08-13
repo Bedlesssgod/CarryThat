@@ -2,15 +2,12 @@ package dev.bedless.carrythat.event;
 
 import dev.bedless.carrythat.CarryThat;
 import dev.bedless.carrythat.util.data.PlayerData;
-import dev.bedless.carrythat.util.player.CarryUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
-import static dev.bedless.carrythat.util.player.CarryUtils.removeBlock;
 
 public class CarryEvent implements Listener {
 
@@ -36,19 +33,15 @@ public class CarryEvent implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (!CarryUtils.canBePickedUp(event)) return;
         if (!PlayerData.exist(event.getPlayer())) {
-            new PlayerData(event.getPlayer(), event.getClickedBlock()).createFollowingArmorStand();
-            removeBlock(event.getClickedBlock());
+            new PlayerData(event.getPlayer(), event.getClickedBlock()).handlePickup();
             event.setCancelled(true);
             return;
+        } else {
+            PlayerData.getPlayerData(event.getPlayer()).handlePickup(event.getClickedBlock());
         }
-        if (!PlayerData.getPlayerData(event.getPlayer()).hasFollowingArmorStand()) {
-            new PlayerData(event.getPlayer(), event.getClickedBlock()).handlePickup(event.getClickedBlock());
-            removeBlock(event.getClickedBlock());
-            event.setCancelled(true);
-            return;
-        }
+        event.setCancelled(true);
+        return;
     }
 
     /**
